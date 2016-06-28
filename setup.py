@@ -5,7 +5,9 @@ setup(
     version='0.1',
     include_package_data=True,
     install_requires=[
-        'Click'
+        'Click',
+        'docker-py',
+        'dockerpty'
     ],
     entry_points={
         'console_scripts': [

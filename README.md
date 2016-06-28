@@ -9,7 +9,7 @@ Some nice text here
 Python 2.7.10
 
 ### Installation
-It is requires to run this in [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/).
+It is required to run this in [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/).
 
 If you use virtualenv run the following:
 ```sh
