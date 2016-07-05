@@ -14,8 +14,16 @@ def sandbox(ctx):
 @sandbox.command()
 @click.argument('file_path', type=click.Path(exists=True, resolve_path=True))
 def java(file_path):
-    print str(file_path)
-    container = docker_client.create_container(image='szilagyiabo/alpine-python', command='/bin/sleep 30')
+    directory = find_dir(str(file_path))
+    container = docker_client.create_container(image='szilagyiabo/alpine-java8', working_dir=directory,
+                                               volumes=[directory],
+                                               host_config=docker_client.create_host_config(binds=[
+                                                   directory + ':' + directory,
+                                               ]),
+                                               stdin_open=True, tty=True,
+                                               command='runJavaCode ' + str(file_path))
+    dockerpty.start(docker_client, container)
+    docker_client.remove_container(container)
 
 
 @sandbox.command()
