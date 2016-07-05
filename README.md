@@ -23,6 +23,21 @@ $ pip install --editable .
 ```
 
 ### Usage
+Run Java code in sandbox:
+```sh
+$ sandbox java /path/to/file.java
+```
+
+Run C/C++ code in sandbox:
+```sh
+$ sandbox gcc /path/to/file.c
+```
+
+Run Python code in sandbox:
+```sh
+$ sandbox python /path/to/file.py
+```
+
 Help page:
 ```sh
 $ sandbox --help
