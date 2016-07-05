@@ -1,8 +1,5 @@
 import click
-from docker import Client
-import dockerpty
-
-docker_client = Client(base_url='unix://var/run/docker.sock')
+from utils.docker_helper import sandbox_file_in_container
 
 
 @click.group()
@@ -14,48 +11,19 @@ def sandbox(ctx):
 @sandbox.command()
 @click.argument('file_path', type=click.Path(exists=True, resolve_path=True))
 def java(file_path):
-    directory = find_dir(str(file_path))
-    container = docker_client.create_container(image='szilagyiabo/alpine-java8', working_dir=directory,
-                                               volumes=[directory],
-                                               host_config=docker_client.create_host_config(binds=[
-                                                   directory + ':' + directory,
-                                               ]),
-                                               stdin_open=True, tty=True,
-                                               command='runJavaCode ' + str(file_path))
-    dockerpty.start(docker_client, container)
-    docker_client.remove_container(container)
+    """>_ sandbox java HelloWorld.java"""
+    sandbox_file_in_container('szilagyiabo/alpine-java8', 'runJavaCode ' + str(file_path), file_path)
 
 
 @sandbox.command()
 @click.argument('file_path', type=click.Path(exists=True, resolve_path=True))
 def python(file_path):
-    directory = find_dir(str(file_path))
-    container = docker_client.create_container(image='szilagyiabo/alpine-python', working_dir=directory,
-                                               volumes=[directory],
-                                               host_config=docker_client.create_host_config(binds=[
-                                                   directory + ':' + directory,
-                                               ]),
-                                               stdin_open=True, tty=True,
-                                               command='python ' + str(file_path))
-    dockerpty.start(docker_client, container)
-    docker_client.remove_container(container)
+    """>_ sandbox python HelloSahara.py"""
+    sandbox_file_in_container('szilagyiabo/alpine-python', 'python ' + str(file_path), file_path)
 
 
 @sandbox.command()
 @click.argument('file_path', type=click.Path(exists=True, resolve_path=True))
 def gcc(file_path):
-    directory = find_dir(str(file_path))
-    container = docker_client.create_container(image='szilagyiabo/alpine-gcc', working_dir=directory,
-                                               volumes=[directory],
-                                               host_config=docker_client.create_host_config(binds=[
-                                                   directory + ':' + directory,
-                                               ]),
-                                               stdin_open=True, tty=True,
-                                               command='runGccCode ' + str(file_path))
-    dockerpty.start(docker_client, container)
-    docker_client.remove_container(container)
-
-
-def find_dir(path_to_file):
-    last_slash = path_to_file.rfind('/')
-    return path_to_file[0:last_slash+1]
+    """>_ sandbox gcc HelloWord.c"""
+    sandbox_file_in_container('szilagyiabo/alpine-gcc', 'runGccCode ' + str(file_path), file_path)
