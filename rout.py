@@ -44,7 +44,16 @@ def python(file_path):
 @sandbox.command()
 @click.argument('file_path', type=click.Path(exists=True, resolve_path=True))
 def gcc(file_path):
-    pass
+    directory = find_dir(str(file_path))
+    container = docker_client.create_container(image='szilagyiabo/alpine-gcc', working_dir=directory,
+                                               volumes=[directory],
+                                               host_config=docker_client.create_host_config(binds=[
+                                                   directory + ':' + directory,
+                                               ]),
+                                               stdin_open=True, tty=True,
+                                               command='runGccCode ' + str(file_path))
+    dockerpty.start(docker_client, container)
+    docker_client.remove_container(container)
 
 
 def find_dir(path_to_file):
